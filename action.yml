@@ -16,18 +16,21 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    - name: Log in to GitHub Container Registry
+      shell: bash
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
     - name: Run Neural Sentinel Engine
       shell: bash
       env:
         FAIL_ON: ${{ inputs.fail-on-severity }}
       run: |
-        # 1. Check if it's a private repo
         if [ "${{ github.event.repository.private }}" == "true" ]; then
           if [ -z "${{ inputs.license-key }}" ]; then
             echo "::error::🔒 Neural Sentinel requires an Enterprise License for private repositories. Contact sales@neuralsentinel.ai"
             exit 1
           fi
-          # Run in Enterprise Mode with their paid key
+          echo "🔒 Running in Enterprise Mode..."
           docker run --rm \
             -e NS_LICENSE_KEY="${{ inputs.license-key }}" \
             -e FAIL_ON="$FAIL_ON" \
@@ -35,8 +38,7 @@ runs:
             ghcr.io/hama-tech/neuralsentinel-scanner:latest \
             /app/engine/ci_scan.sh /scan_target
         else
-          # 2. It's a public repo! Run in Free Community Mode
-          echo "🌍 Running Neural Sentinel in Open Source Community Mode..."
+          echo "🌍 Running in Open Source Community Mode (Free)..."
           docker run --rm \
             -e NS_MODE="community" \
             -e FAIL_ON="$FAIL_ON" \
