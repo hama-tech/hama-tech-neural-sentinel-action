@@ -29,3 +29,21 @@ jobs:
           # Email neuralsentinel.sec@proton.me for an Enterprise Key for private repos
           license-key: ${{ secrets.NEURAL_SENTINEL_LICENSE_KEY }} 
           fail-on-severity: 'HIGH' # Options: CRITICAL, HIGH
+
+---
+
+## 🔍 How It Works
+
+1. **Static Analysis:** Scans your AI agent schemas (CrewAI, LangGraph, AutoGen) for structural vulnerabilities without needing heavy LLM inference in the CI pipeline.
+2. **Compliance Mapping:** Automatically flags violations and maps them to EU AI Act Articles (9, 10, 14, 15) and ISO/IEC 42001 Annex A controls.
+3. **Air-Gapped Security:** The scanner runs entirely within your GitHub Actions runner. Your source code and prompts never leave your environment.
+
+---
+
+## 🏢 Enterprise & Private Repositories
+
+The free Community Mode is designed for public, open-source repositories. 
+
+For **private repositories** or enterprise deployments requiring auditor-ready compliance reports, an Enterprise License Key is required. 
+
+📩 **Contact:** `neuralsentinel.sec@proton.me` to request an enterprise license or schedule a technical demo.
