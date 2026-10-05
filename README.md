@@ -30,7 +30,7 @@ jobs:
           license-key: ${{ secrets.NEURAL_SENTINEL_LICENSE_KEY }} 
           fail-on-severity: 'HIGH' # Options: CRITICAL, HIGH
 
-
+```
 
 
 
