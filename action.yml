@@ -1,26 +1,48 @@
-      - name: Run Neural Sentinel Engine
-        shell: bash
-        env:
-          FAIL_ON: ${{ inputs.fail-on-severity }}
-        run: |
-          if [ "${{ github.event.repository.private }}" == "true" ]; then
-            if [ -z "${{ inputs.license-key }}" ]; then
-              echo "::error::🔒 Neural Sentinel requires an Enterprise License for private repositories. Contact neuralsentinel.sec@proton.me"
-              exit 1
-            fi
-            echo "🔒 Running in Enterprise Mode..."
-            docker run --rm \
-              -e NS_LICENSE_KEY="${{ inputs.license-key }}" \
-              -e FAIL_ON="$FAIL_ON" \
-              -v "${{ github.workspace }}:/scan_target:ro" \
-              ghcr.io/hama-tech/neuralsentinel-scanner:v1.1 \
-              /app/engine/ci_scan.sh /scan_target
-          else
-            echo "🌍 Running in Open Source Community Mode (Free)..."
-            docker run --rm \
-              -e NS_MODE="community" \
-              -e FAIL_ON="$FAIL_ON" \
-              -v "${{ github.workspace }}:/scan_target:ro" \
-              ghcr.io/hama-tech/neuralsentinel-scanner:v1.1 \
-              /app/engine/ci_scan.sh /scan_target
+name: 'Neural Sentinel AI TRiSM Scanner'
+description: 'Blocks PRs with vulnerable AI schemas. Free for Open Source, Enterprise for Private.'
+branding:
+  icon: 'shield'
+  color: 'blue'
+
+inputs:
+  license-key:
+    description: 'Enterprise License Key. Leave blank for Open Source/Public repos.'
+    required: false
+  fail-on-severity:
+    description: 'Block PR if findings of this severity are found (CRITICAL, HIGH)'
+    required: false
+    default: 'HIGH'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Log in to GitHub Container Registry
+      shell: bash
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+    - name: Run Neural Sentinel Engine
+      shell: bash
+      env:
+        FAIL_ON: ${{ inputs.fail-on-severity }}
+      run: |
+        if [ "${{ github.event.repository.private }}" == "true" ]; then
+          if [ -z "${{ inputs.license-key }}" ]; then
+            echo "::error::🔒 Neural Sentinel requires an Enterprise License for private repositories. Contact neuralsentinel.sec@proton.me"
+            exit 1
           fi
+          echo "🔒 Running in Enterprise Mode..."
+          docker run --rm \
+            -e NS_LICENSE_KEY="${{ inputs.license-key }}" \
+            -e FAIL_ON="$FAIL_ON" \
+            -v "${{ github.workspace }}:/scan_target:ro" \
+            ghcr.io/hama-tech/neuralsentinel-scanner:v1.1 \
+            /app/engine/ci_scan.sh /scan_target
+        else
+          echo "🌍 Running in Open Source Community Mode (Free)..."
+          docker run --rm \
+            -e NS_MODE="community" \
+            -e FAIL_ON="$FAIL_ON" \
+            -v "${{ github.workspace }}:/scan_target:ro" \
+            ghcr.io/hama-tech/neuralsentinel-scanner:v1.1 \
+            /app/engine/ci_scan.sh /scan_target
+        fi
