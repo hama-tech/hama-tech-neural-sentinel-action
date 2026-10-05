@@ -23,7 +23,7 @@ jobs:
         uses: actions/checkout@v4
       
       - name: Run Neural Sentinel Scanner
-        uses: hama-tech/neural-sentinel-action@v1
+        uses: hama-tech/neural-sentinel-action@main
         with:
           # Leave blank for public/open-source repos (Free Community Mode)
           # Add your Enterprise Key for private repos
