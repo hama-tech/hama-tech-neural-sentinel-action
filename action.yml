@@ -31,7 +31,7 @@ runs:
             -e NS_LICENSE_KEY="${{ inputs.license-key }}" \
             -e FAIL_ON="$FAIL_ON" \
             -v "${{ github.workspace }}:/scan_target:ro" \
-            ghcr.io/hama-tech/neuralsentinel-scanner:v1.1 \
+            ghcr.io/hama-tech/neuralsentinel-scanner:v1.2 \
             /app/engine/ci_scan.sh /scan_target
         else
           echo "🌍 Running in Open Source Community Mode (Free)..."
@@ -39,6 +39,6 @@ runs:
             -e NS_MODE="community" \
             -e FAIL_ON="$FAIL_ON" \
             -v "${{ github.workspace }}:/scan_target:ro" \
-            ghcr.io/hama-tech/neuralsentinel-scanner:v1.1 \
+            ghcr.io/hama-tech/neuralsentinel-scanner:v1.2 \
             /app/engine/ci_scan.sh /scan_target
         fi
