@@ -27,7 +27,7 @@ runs:
             exit 1
           fi
           echo "🔒 Running in Enterprise Mode..."
-          docker run --rm \
+          docker run --rm --entrypoint "" \
             -e NS_LICENSE_KEY="${{ inputs.license-key }}" \
             -e FAIL_ON="$FAIL_ON" \
             -v "${{ github.workspace }}:/scan_target:ro" \
@@ -35,7 +35,7 @@ runs:
             /app/engine/ci_scan.sh /scan_target
         else
           echo "🌍 Running in Open Source Community Mode (Free)..."
-          docker run --rm \
+          docker run --rm --entrypoint "" \
             -e NS_MODE="community" \
             -e FAIL_ON="$FAIL_ON" \
             -v "${{ github.workspace }}:/scan_target:ro" \
