@@ -31,8 +31,13 @@ jobs:
           fail-on-severity: 'HIGH' # Options: CRITICAL, HIGH
 
 
----
 
+
+
+
+
+
+---
 
 ## 🔍 How It Works
 
