@@ -1,6 +1,31 @@
-# hama-tech-neural-sentinel-action
-Automated AI TRiSM &amp; Security Scanner for Agentic AI. Blocks PRs with CWE-269 kill-chains, prompt injection, and unconstrained parameters. Maps to EU AI Act &amp; ISO/IEC 42001.
+# 🛡️ Neural Sentinel AI TRiSM Scanner
 
-Add this badge to your README to show the AI community your agent schemas are mathematically verified and EU AI Act compliant!
+[![Secured by Neural Sentinel](https://img.shields.io/badge/Secured%20by-Neural%20Sentinel-blue?style=for-the-badge&logo=shield)](https://github.com/hama-tech/neural-sentinel-action)
 
- 🛡️ Secured by Neural Sentinel 
+**Automated AI Trust, Risk, and Security Management (TRiSM) for Agentic AI.**  
+Blocks Pull Requests containing CWE-269 combinatorial kill-chains, prompt injection vulnerabilities, and unconstrained parameters. Automatically maps findings to the **EU AI Act** and **ISO/IEC 42001**.
+
+---
+
+## 🚀 Quick Start
+
+Add this to your `.github/workflows/neural-sentinel.yml`:
+
+```yaml
+name: Neural Sentinel AI Scan
+on: [pull_request]
+
+jobs:
+  ai-security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      
+      - name: Run Neural Sentinel Scanner
+        uses: hama-tech/neural-sentinel-action@v1
+        with:
+          # Leave blank for public/open-source repos (Free Community Mode)
+          # Add your Enterprise Key for private repos
+          license-key: ${{ secrets.NEURAL_SENTINEL_LICENSE_KEY }} 
+          fail-on-severity: 'HIGH' # Options: CRITICAL, HIGH
