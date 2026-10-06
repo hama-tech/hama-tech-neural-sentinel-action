@@ -1,44 +1,56 @@
 name: 'Neural Sentinel AI TRiSM Scanner'
-description: 'Blocks PRs with vulnerable AI schemas. Free for Open Source, Enterprise for Private.'
+description: 'Blocks PRs with vulnerable AI schemas. Free for public repositories; licensed for private repositories.'
 branding:
   icon: 'shield'
   color: 'blue'
 
 inputs:
-  license-key:
-    description: 'Enterprise License Key. Leave blank for Open Source/Public repos.'
-    required: false
   fail-on-severity:
-    description: 'Block PR if findings of this severity are found (CRITICAL, HIGH)'
+    description: 'Block the PR if findings of this severity are found (CRITICAL, HIGH)'
     required: false
     default: 'HIGH'
+  license-key:
+    description: 'License key (private repositories only).'
+    required: false
+  registry-user:
+    description: 'GitHub username granted access to the private enterprise image (licensed customers).'
+    required: false
+  registry-token:
+    description: 'Read-only token (read:packages) for the private enterprise image (licensed customers).'
+    required: false
 
 runs:
   using: 'composite'
   steps:
-    - name: Run Neural Sentinel Engine
+    - name: Run Neural Sentinel
       shell: bash
       env:
         FAIL_ON: ${{ inputs.fail-on-severity }}
+        NS_LICENSE_KEY: ${{ inputs.license-key }}
+        REGISTRY_USER: ${{ inputs.registry-user }}
+        REGISTRY_TOKEN: ${{ inputs.registry-token }}
+        IS_PRIVATE: ${{ github.event.repository.private }}
+        WORKSPACE: ${{ github.workspace }}
       run: |
-        if [ "${{ github.event.repository.private }}" == "true" ]; then
-          if [ -z "${{ inputs.license-key }}" ]; then
-            echo "::error::🔒 Neural Sentinel requires an Enterprise License for private repositories. Contact mohamed@neuralsentinel.online"
+        if [ "$IS_PRIVATE" == "true" ]; then
+          if [ -z "$NS_LICENSE_KEY" ] || [ -z "$REGISTRY_USER" ] || [ -z "$REGISTRY_TOKEN" ]; then
+            echo "::error::Private repositories require a Neural Sentinel license (license-key, registry-user, registry-token). Contact mohamed@neuralsentinel.online"
             exit 1
           fi
-          echo "🔒 Running in Enterprise Mode..."
+          echo "🔒 Running licensed scan..."
+          echo "$REGISTRY_TOKEN" | docker login ghcr.io -u "$REGISTRY_USER" --password-stdin
           docker run --rm --entrypoint "" \
-            -e NS_LICENSE_KEY="${{ inputs.license-key }}" \
+            -e NS_MODE="enterprise" \
+            -e NS_LICENSE_KEY="$NS_LICENSE_KEY" \
             -e FAIL_ON="$FAIL_ON" \
-            -v "${{ github.workspace }}:/scan_target:ro" \
-            ghcr.io/hama-tech/neuralsentinel-scanner:v1.3 \
+            -v "$WORKSPACE:/scan_target:ro" \
+            ghcr.io/hama-tech/neuralsentinel-enterprise:v1.0 \
             /app/engine/ci_scan.sh /scan_target
         else
-          echo "🌍 Running in Open Source Community Mode (Free)..."
+          echo "🌍 Running community scan (free for public repositories)..."
           docker run --rm --entrypoint "" \
-            -e NS_MODE="community" \
             -e FAIL_ON="$FAIL_ON" \
-            -v "${{ github.workspace }}:/scan_target:ro" \
-            ghcr.io/hama-tech/neuralsentinel-scanner:v1.3 \
+            -v "$WORKSPACE:/scan_target:ro" \
+            ghcr.io/hama-tech/neuralsentinel-scanner:v2.0 \
             /app/engine/ci_scan.sh /scan_target
         fi
