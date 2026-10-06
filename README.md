@@ -1,3 +1,5 @@
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/15266/badge)](https://www.bestpractices.dev/projects/15266)
+
 # 🛡️ Neural Sentinel AI TRiSM Scanner
 
 [![Secured by Neural Sentinel](https://img.shields.io/badge/Secured%20by-Neural%20Sentinel-blue?style=for-the-badge&logo=shield)](https://github.com/hama-tech/hama-tech-neural-sentinel-action)
