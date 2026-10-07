@@ -55,4 +55,4 @@ The free Community Mode is designed for public, open-source repositories.
 
 For **private repositories** or enterprise deployments requiring auditor-ready compliance reports, an Enterprise License Key is required. 
 
-📩 **Contact:** `neuralsentinel.sec@proton.me` to request an enterprise license or schedule a technical demo.
+📩 **Contact:** `mohamed@neuralsentinel.online` to request an enterprise license or schedule a technical demo.
