@@ -61,6 +61,6 @@ Enterprise capabilities include:
 
 🔗 GRC Automation Add-on: Automatically push structured, HMAC-SHA256 signed JSON evidence directly to Vanta, Drata, Jira, or custom SIEMs.
 
-👉 View Public Webhook Schema & Security Docs
+👉 View [Public Webhook Schema & Security Docs](https://github.com/hama-tech/hama-tech-neural-sentinel-action/blob/main/WEBHOOK_SCHEMA.md)
 
 📩 **Contact:** `engineering@neuralsentinel.online` to request an enterprise license or schedule a technical demo.
